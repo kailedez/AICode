@@ -1,7 +1,7 @@
 import { createApp } from './app'
 
-const port = Number(process.env.PORT ?? 3001)
 const { app, store } = createApp()
+const port = store.config.port
 
 await store.ensure()
 

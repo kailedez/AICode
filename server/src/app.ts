@@ -30,7 +30,12 @@ export function createApp(dataDir = defaultDataDir) {
     res.json({
       code: 0,
       message: 'ok',
-      data: { status: 'ok' },
+      data: {
+        status: 'ok',
+        datasource: {
+          provider: store.config.database.provider,
+        },
+      },
       requestId: res.locals.requestId,
     })
   })
@@ -42,7 +47,14 @@ export function createApp(dataDir = defaultDataDir) {
   app.use('/api/v1', createNotesRouter(store))
   app.use('/api/v1', createRecycleBinRouter(store))
 
-  app.use((error: unknown, _req: express.Request, res: express.Response) => {
+  function errorHandler(
+    error: unknown,
+    _req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
+    void next
+
     if (error instanceof HttpError) {
       res.status(error.statusCode).json({
         code: error.code,
@@ -70,7 +82,9 @@ export function createApp(dataDir = defaultDataDir) {
       data: null,
       requestId: res.locals.requestId as string,
     })
-  })
+  }
+
+  app.use(errorHandler)
 
   return { app, store }
 }
