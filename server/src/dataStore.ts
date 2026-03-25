@@ -12,11 +12,11 @@ function createSeed(): DatabaseSchema {
   const captureFolderUid = createUid('fld')
 
   const noteOneHtml =
-    '<h1>NoteFlow 迭代方向</h1><p>围绕目录组织、自动保存和在线同步建立一致体验。</p><ul><li><p>明确 API 数据结构</p></li><li><p>建立保存状态提示</p></li><li><p>重做信息层级</p></li></ul>'
+    '<h1>NoteFlow 杩唬鏂瑰悜</h1><p>鍥寸粫鐩綍缁勭粐銆佽嚜鍔ㄤ繚瀛樺拰鍦ㄧ嚎鍚屾寤虹珛涓€鑷翠綋楠屻€?/p><ul><li><p>鏄庣‘ API 鏁版嵁缁撴瀯</p></li><li><p>寤虹珛淇濆瓨鐘舵€佹彁绀?/p></li><li><p>閲嶅仛淇℃伅灞傜骇</p></li></ul>'
   const noteTwoHtml =
-    '<h2>竞品观察</h2><p>优秀笔记产品通常把搜索、收藏、最近更新放在第一屏可见范围内。</p><blockquote><p>信息架构比视觉细节更先决定专业感。</p></blockquote>'
+    '<h2>绔炲搧瑙傚療</h2><p>浼樼绗旇浜у搧閫氬父鎶婃悳绱€佹敹钘忋€佹渶杩戞洿鏂版斁鍦ㄧ涓€灞忓彲瑙佽寖鍥村唴銆?/p><blockquote><p>淇℃伅鏋舵瀯姣旇瑙夌粏鑺傛洿鍏堝喅瀹氫笓涓氭劅銆?/p></blockquote>'
   const noteThreeHtml =
-    '<p>今天整理了新的编辑器交互：</p><ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox" checked="checked"><span></span></label><div><p>标题独立保存</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>补充历史版本入口</p></div></li></ul>'
+    '<p>浠婂ぉ鏁寸悊浜嗘柊鐨勭紪杈戝櫒浜や簰锛?/p><ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox" checked="checked"><span></span></label><div><p>鏍囬鐙珛淇濆瓨</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>琛ュ厖鍘嗗彶鐗堟湰鍏ュ彛</p></div></li></ul>'
 
   const noteOneText = stripHtml(noteOneHtml)
   const noteTwoText = stripHtml(noteTwoHtml)
@@ -56,7 +56,8 @@ function createSeed(): DatabaseSchema {
         uid: productFolderUid,
         userId: 1,
         parentUid: null,
-        name: '产品设计',
+        ancestorPath: null,
+        name: '浜у搧璁捐',
         sortOrder: 10,
         isExpanded: true,
         createdAt,
@@ -68,7 +69,8 @@ function createSeed(): DatabaseSchema {
         uid: researchFolderUid,
         userId: 1,
         parentUid: productFolderUid,
-        name: '竞品研究',
+        ancestorPath: productFolderUid,
+        name: '绔炲搧鐮旂┒',
         sortOrder: 20,
         isExpanded: true,
         createdAt,
@@ -80,7 +82,8 @@ function createSeed(): DatabaseSchema {
         uid: sprintFolderUid,
         userId: 1,
         parentUid: productFolderUid,
-        name: 'Sprint 规划',
+        ancestorPath: productFolderUid,
+        name: 'Sprint 瑙勫垝',
         sortOrder: 30,
         isExpanded: true,
         createdAt,
@@ -92,7 +95,8 @@ function createSeed(): DatabaseSchema {
         uid: captureFolderUid,
         userId: 1,
         parentUid: null,
-        name: '灵感速记',
+        ancestorPath: null,
+        name: '鐏垫劅閫熻',
         sortOrder: 40,
         isExpanded: true,
         createdAt,
@@ -106,13 +110,14 @@ function createSeed(): DatabaseSchema {
         uid: createUid('note'),
         userId: 1,
         folderUid: sprintFolderUid,
-        title: 'NoteFlow 迭代方向',
+        title: 'NoteFlow 杩唬鏂瑰悜',
         summary: summarize(noteOneText),
         contentJson: null,
         contentHtml: noteOneHtml,
         contentText: noteOneText,
         wordCount: noteOneText.length,
         status: 1,
+        revisionNo: 0,
         lastEditedAt: createdAt,
         createdAt,
         updatedAt: createdAt,
@@ -123,13 +128,14 @@ function createSeed(): DatabaseSchema {
         uid: createUid('note'),
         userId: 1,
         folderUid: researchFolderUid,
-        title: '竞品观察',
+        title: '绔炲搧瑙傚療',
         summary: summarize(noteTwoText),
         contentJson: null,
         contentHtml: noteTwoHtml,
         contentText: noteTwoText,
         wordCount: noteTwoText.length,
         status: 1,
+        revisionNo: 0,
         lastEditedAt: createdAt,
         createdAt,
         updatedAt: createdAt,
@@ -140,13 +146,14 @@ function createSeed(): DatabaseSchema {
         uid: createUid('note'),
         userId: 1,
         folderUid: captureFolderUid,
-        title: '今日速记',
+        title: '浠婃棩閫熻',
         summary: summarize(noteThreeText),
         contentJson: null,
         contentHtml: noteThreeHtml,
         contentText: noteThreeText,
         wordCount: noteThreeText.length,
         status: 1,
+        revisionNo: 0,
         lastEditedAt: createdAt,
         createdAt,
         updatedAt: createdAt,
@@ -154,6 +161,7 @@ function createSeed(): DatabaseSchema {
       },
     ],
     noteRevisions: [],
+    userSessions: [],
     operationLogs: [],
   }
 }
@@ -164,6 +172,19 @@ function normalizeDatabase(data: DatabaseSchema): DatabaseSchema {
   if (demoUser && !demoUser.passwordHash) {
     demoUser.passwordHash = 'noteflow123'
   }
+
+  next.folders = next.folders.map((folder) => ({
+    ...folder,
+    ancestorPath: folder.ancestorPath ?? folder.parentUid,
+  }))
+
+  next.notes = next.notes.map((note) => ({
+    ...note,
+    revisionNo: note.revisionNo ?? 0,
+  }))
+
+  next.userSessions = Array.isArray(next.userSessions) ? next.userSessions : []
+
   return next
 }
 

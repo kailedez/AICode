@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  uid          String        @unique
+  email        String?       @unique
+  mobile       String?
+  passwordHash String?
+  nickname     String
+  avatarUrl    String?
+  status       Int
+  lastLoginAt  DateTime?
+  createdAt    DateTime
+  updatedAt    DateTime
+  deletedAt    DateTime?
+
+  settings      UserSetting?
+  folders       Folder[]
+  notes         Note[]
+  noteRevisions NoteRevision[]
+  userSessions  UserSession[]
+  operationLogs OperationLog[]
+
+  @@map("users")
+}
+
+model UserSetting {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @unique
+  theme             String
+  defaultFolderUid  String?
+  editorPreferences String?
+  createdAt         DateTime
+  updatedAt         DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model Folder {
+  id           Int       @id @default(autoincrement())
+  uid          String    @unique
+  userId       Int
+  parentUid    String?
+  ancestorPath String?
+  name         String
+  sortOrder    Int
+  isExpanded   Boolean
+  createdAt    DateTime
+  updatedAt    DateTime
+  deletedAt    DateTime?
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notes Note[]
+
+  @@index([userId, parentUid, deletedAt])
+  @@map("folders")
+}
+
+model Note {
+  id           Int       @id @default(autoincrement())
+  uid          String    @unique
+  userId       Int
+  folderUid    String?
+  title        String
+  summary      String?
+  contentJson  String?
+  contentHtml  String?
+  contentText  String?
+  wordCount    Int
+  status       Int
+  revisionNo   Int
+  lastEditedAt DateTime
+  createdAt    DateTime
+  updatedAt    DateTime
+  deletedAt    DateTime?
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder Folder? @relation(fields: [folderUid], references: [uid], onDelete: SetNull)
+
+  @@index([userId, folderUid, updatedAt])
+  @@index([userId, status, updatedAt])
+  @@map("notes")
+}
+
+model NoteRevision {
+  id          Int      @id @default(autoincrement())
+  noteUid     String
+  userId      Int
+  versionNo   Int
+  title       String
+  contentJson String?
+  contentHtml String?
+  contentText String?
+  createdAt   DateTime
+  createdBy   Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([noteUid, versionNo])
+  @@map("note_revisions")
+}
+
+model UserSession {
+  id               Int       @id @default(autoincrement())
+  sessionUid       String    @unique
+  userId           Int
+  refreshTokenHash String
+  clientType       String
+  deviceInfo       String?
+  ip               String?
+  expiredAt        DateTime
+  revokedAt        DateTime?
+  createdAt        DateTime
+  updatedAt        DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt, expiredAt])
+  @@map("user_sessions")
+}
+
+model OperationLog {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  targetType String
+  targetUid  String
+  action     String
+  requestId  String?
+  detail     String?
+  createdAt  DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("operation_logs")
+}

@@ -2,12 +2,13 @@ import cors from 'cors'
 import express from 'express'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { DataStore } from './dataStore'
+import { DatabaseService } from './database'
 import { createAuthMiddleware } from './modules/auth/middleware'
 import { createAuthRouter } from './modules/auth/router'
 import { createFoldersRouter } from './modules/folders/router'
 import { createMeRouter } from './modules/me/router'
 import { createNotesRouter } from './modules/notes/router'
+import { createRecycleBinRouter } from './modules/recycleBin/router'
 import { HttpError } from './modules/shared/errors'
 import { createRequestId } from './utils'
 
@@ -16,7 +17,7 @@ const defaultDataDir = path.resolve(currentDir, '../data')
 
 export function createApp(dataDir = defaultDataDir) {
   const app = express()
-  const store = new DataStore(dataDir)
+  const store = new DatabaseService(dataDir)
 
   app.use(cors())
   app.use(express.json({ limit: '2mb' }))
@@ -39,6 +40,7 @@ export function createApp(dataDir = defaultDataDir) {
   app.use('/api/v1', createMeRouter(store))
   app.use('/api/v1', createFoldersRouter(store))
   app.use('/api/v1', createNotesRouter(store))
+  app.use('/api/v1', createRecycleBinRouter(store))
 
   app.use((error: unknown, _req: express.Request, res: express.Response) => {
     if (error instanceof HttpError) {

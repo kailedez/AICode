@@ -1,5 +1,14 @@
 import type { FolderRecord, FolderTreeNode, NoteRecord, UserRecord, UserSettingRecord } from '../../types'
 
+type FolderLike = Pick<FolderRecord, 'uid' | 'userId' | 'parentUid' | 'name' | 'sortOrder' | 'isExpanded'> & {
+  deletedAt: string | Date | null
+}
+
+type NoteLike = Pick<NoteRecord, 'uid' | 'userId' | 'folderUid'> & {
+  deletedAt: string | Date | null
+  status: number
+}
+
 export function requireCurrentUser(users: UserRecord[]) {
   const user = users.find((item) => item.deletedAt === null && item.status === 1)
   if (!user) {
@@ -24,15 +33,19 @@ export function requireUserSettings(settings: UserSettingRecord[], userId: numbe
   return setting
 }
 
-export function activeFolders(folders: FolderRecord[], userId: number) {
+export function activeFolders<T extends FolderLike>(folders: T[], userId: number) {
   return folders.filter((item) => item.userId === userId && item.deletedAt === null)
 }
 
-export function activeNotes(notes: NoteRecord[], userId: number) {
+export function activeNotes<T extends NoteLike>(notes: T[], userId: number) {
   return notes.filter((item) => item.userId === userId && item.deletedAt === null && item.status !== 3)
 }
 
-export function buildFolderTree(folders: FolderRecord[], notes: NoteRecord[], userId: number): FolderTreeNode[] {
+export function buildFolderTree<TFolder extends FolderLike, TNote extends NoteLike>(
+  folders: TFolder[],
+  notes: TNote[],
+  userId: number,
+): FolderTreeNode[] {
   const userFolders = activeFolders(folders, userId)
   const userNotes = activeNotes(notes, userId)
   const directCounts = userNotes.reduce<Record<string, number>>((acc, note) => {

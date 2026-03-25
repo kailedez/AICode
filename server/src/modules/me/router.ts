@@ -1,21 +1,16 @@
 import { Router } from 'express'
-import { z } from 'zod'
-import type { DataStore } from '../../dataStore'
+import type { DatabaseService } from '../../database'
 import { sendOk } from '../shared/response'
-import { requireUserByUid, requireUserSettings } from '../shared/helpers'
+import { updateSettingsSchema } from './schema'
+import { createMeService } from './service'
 
-export function createMeRouter(store: DataStore) {
+export function createMeRouter(store: DatabaseService) {
   const router = Router()
+  const service = createMeService(store)
 
   router.get('/me', async (_req, res, next) => {
     try {
-      const db = await store.read()
-      const user = requireUserByUid(db.users, res.locals.currentUserUid as string)
-      sendOk(res, {
-        uid: user.uid,
-        nickname: user.nickname,
-        avatarUrl: user.avatarUrl,
-      })
+      sendOk(res, await service.getProfile(res.locals.currentUserUid as string))
     } catch (error) {
       next(error)
     }
@@ -23,13 +18,7 @@ export function createMeRouter(store: DataStore) {
 
   router.get('/me/settings', async (_req, res, next) => {
     try {
-      const db = await store.read()
-      const user = requireUserByUid(db.users, res.locals.currentUserUid as string)
-      const settings = requireUserSettings(db.userSettings, user.id)
-      sendOk(res, {
-        theme: settings.theme,
-        defaultFolderUid: settings.defaultFolderUid,
-      })
+      sendOk(res, await service.getSettings(res.locals.currentUserUid as string))
     } catch (error) {
       next(error)
     }
@@ -37,24 +26,8 @@ export function createMeRouter(store: DataStore) {
 
   router.put('/me/settings', async (req, res, next) => {
     try {
-      const schema = z.object({
-        theme: z.enum(['light', 'dark', 'system']).optional(),
-        defaultFolderUid: z.string().nullable().optional(),
-      })
-      const payload = schema.parse(req.body)
-      const db = await store.read()
-      const user = requireUserByUid(db.users, res.locals.currentUserUid as string)
-      const settings = requireUserSettings(db.userSettings, user.id)
-
-      if (payload.theme !== undefined) settings.theme = payload.theme
-      if (payload.defaultFolderUid !== undefined) settings.defaultFolderUid = payload.defaultFolderUid
-      settings.updatedAt = new Date().toISOString()
-
-      await store.write(db)
-      sendOk(res, {
-        theme: settings.theme,
-        defaultFolderUid: settings.defaultFolderUid,
-      })
+      const payload = updateSettingsSchema.parse(req.body)
+      sendOk(res, await service.updateSettings(res.locals.currentUserUid as string, payload))
     } catch (error) {
       next(error)
     }

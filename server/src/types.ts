@@ -30,6 +30,7 @@ export interface FolderRecord {
   uid: string
   userId: number
   parentUid: string | null
+  ancestorPath: string | null
   name: string
   sortOrder: number
   isExpanded: boolean
@@ -50,6 +51,7 @@ export interface NoteRecord {
   contentText: string | null
   wordCount: number
   status: 1 | 2 | 3
+  revisionNo: number
   lastEditedAt: string
   createdAt: string
   updatedAt: string
@@ -69,6 +71,20 @@ export interface NoteRevisionRecord {
   createdBy: number
 }
 
+export interface UserSessionRecord {
+  id: number
+  sessionUid: string
+  userId: number
+  refreshTokenHash: string
+  clientType: string
+  deviceInfo: string | null
+  ip: string | null
+  expiredAt: string
+  revokedAt: string | null
+  createdAt: string
+  updatedAt: string
+}
+
 export interface OperationLogRecord {
   id: number
   userId: number
@@ -86,6 +102,7 @@ export interface DatabaseSchema {
   folders: FolderRecord[]
   notes: NoteRecord[]
   noteRevisions: NoteRevisionRecord[]
+  userSessions: UserSessionRecord[]
   operationLogs: OperationLogRecord[]
 }
 
