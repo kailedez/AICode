@@ -655,3 +655,5 @@ NoteFlow 当前已经从“前端原型”进入“前后端可联调 MVP”阶�
 - 2026-03-26：前后端联通复核通过，`/api/v1/folders/tree` 与 `/api/v1/notes` 返回中文内容正常，Vite 代理链路可正常展示修复后的数据。
 - 2026-03-26：后端数据库目标从本地 SQLite 切换为 Neon PostgreSQL，运行时连接使用池化 `DATABASE_URL`，Prisma CLI 使用直连 `DIRECT_URL`。
 - 2026-03-26：数据库初始化逻辑不再在应用启动时手写建表，改为依赖 Prisma 对 Neon 执行 `db push` / migration 后再启动服务。
+- 2026-03-26：已完成 Neon PostgreSQL `db push`，后端健康检查返回 `datasource.provider = postgresql`。
+- 2026-03-26：已完成前后端联通验证，`127.0.0.1:5173` 通过 Vite 代理访问 Neon 后端的 `/api/v1/me`、`/api/v1/notes` 均正常。
