@@ -1,6 +1,7 @@
 import type { DatabaseService } from '../../database'
 import { buildFolderTree, collectFolderUids } from '../shared/helpers'
 import { HttpError } from '../shared/errors'
+import { createLogsService } from '../logs/service'
 import { createNotesRepository } from './repository'
 
 function mapNoteListItem(
@@ -54,6 +55,7 @@ function mapNoteDetail(
 
 export function createNotesService(store: DatabaseService) {
   const repository = createNotesRepository(store)
+  const logsService = createLogsService(store)
 
   async function requireUser(userUid: string) {
     const user = await repository.findActiveUserByUid(userUid)
@@ -104,19 +106,40 @@ export function createNotesService(store: DatabaseService) {
       return mapNoteDetail(note, note.folderUid ? folderMap.get(note.folderUid) ?? null : null)
     },
 
-    async createNote(userUid: string, input: { title: string; folderUid: string | null }) {
+    async createNote(userUid: string, input: { title: string; folderUid: string | null }, requestId?: string | null) {
       const user = await requireUser(userUid)
       const note = await repository.createNote(user.id, input)
+      await logsService.record({
+        userId: user.id,
+        targetType: 'note',
+        targetUid: note.uid,
+        action: 'create',
+        requestId,
+        detail: input,
+      })
       const folderMap = await getFolderNameMap(user.id)
       return mapNoteDetail(note, note.folderUid ? folderMap.get(note.folderUid) ?? null : null)
     },
 
-    async updateNote(userUid: string, noteUid: string, input: { title?: string; folderUid?: string | null }) {
+    async updateNote(
+      userUid: string,
+      noteUid: string,
+      input: { title?: string; folderUid?: string | null },
+      requestId?: string | null,
+    ) {
       const user = await requireUser(userUid)
       const note = await repository.updateNote(user.id, noteUid, input)
       if (!note) {
         throw new HttpError(404, 40401, '绗旇涓嶅瓨鍦�')
       }
+      await logsService.record({
+        userId: user.id,
+        targetType: 'note',
+        targetUid: note.uid,
+        action: 'update',
+        requestId,
+        detail: input,
+      })
       const folderMap = await getFolderNameMap(user.id)
       return mapNoteDetail(note, note.folderUid ? folderMap.get(note.folderUid) ?? null : null)
     },
@@ -131,22 +154,44 @@ export function createNotesService(store: DatabaseService) {
         contentText: string | null
         wordCount: number
       },
+      requestId?: string | null,
     ) {
       const user = await requireUser(userUid)
       const result = await repository.saveNoteContent(user.id, noteUid, input)
       if (!result) {
         throw new HttpError(404, 40401, '绗旇涓嶅瓨鍦�')
       }
+      if (result.changed) {
+        await logsService.record({
+          userId: user.id,
+          targetType: 'note',
+          targetUid: result.note.uid,
+          action: 'save_content',
+          requestId,
+          detail: {
+            title: input.title,
+            wordCount: input.wordCount,
+            revisionNo: result.note.revisionNo,
+          },
+        })
+      }
       const folderMap = await getFolderNameMap(user.id)
       return mapNoteDetail(result.note, result.note.folderUid ? folderMap.get(result.note.folderUid) ?? null : null)
     },
 
-    async deleteNote(userUid: string, noteUid: string) {
+    async deleteNote(userUid: string, noteUid: string, requestId?: string | null) {
       const user = await requireUser(userUid)
       const note = await repository.softDeleteNote(user.id, noteUid)
       if (!note) {
         throw new HttpError(404, 40401, '绗旇涓嶅瓨鍦�')
       }
+      await logsService.record({
+        userId: user.id,
+        targetType: 'note',
+        targetUid: note.uid,
+        action: 'delete',
+        requestId,
+      })
       return { success: true as const }
     },
 
@@ -166,7 +211,7 @@ export function createNotesService(store: DatabaseService) {
       }))
     },
 
-    async restoreRevision(userUid: string, noteUid: string, versionNo: number) {
+    async restoreRevision(userUid: string, noteUid: string, versionNo: number, requestId?: string | null) {
       const user = await requireUser(userUid)
       const result = await repository.restoreRevision(user.id, noteUid, versionNo)
       if (!result) {
@@ -175,6 +220,14 @@ export function createNotesService(store: DatabaseService) {
       if (!result.revision) {
         throw new HttpError(404, 40401, '鐗堟湰涓嶅瓨鍦�')
       }
+      await logsService.record({
+        userId: user.id,
+        targetType: 'note',
+        targetUid: result.note.uid,
+        action: 'restore_revision',
+        requestId,
+        detail: { versionNo },
+      })
       const folderMap = await getFolderNameMap(user.id)
       return mapNoteDetail(result.note, result.note.folderUid ? folderMap.get(result.note.folderUid) ?? null : null)
     },
@@ -186,22 +239,36 @@ export function createNotesService(store: DatabaseService) {
       return notes.map((item) => mapNoteDetail(item, item.folderUid ? folderMap.get(item.folderUid) ?? null : null))
     },
 
-    async recoverNote(userUid: string, noteUid: string) {
+    async recoverNote(userUid: string, noteUid: string, requestId?: string | null) {
       const user = await requireUser(userUid)
       const note = await repository.recoverNote(user.id, noteUid)
       if (!note) {
         throw new HttpError(404, 40401, '绗旇涓嶅瓨鍦�')
       }
+      await logsService.record({
+        userId: user.id,
+        targetType: 'note',
+        targetUid: note.uid,
+        action: 'recover',
+        requestId,
+      })
       const folderMap = await getFolderNameMap(user.id)
       return mapNoteDetail(note, note.folderUid ? folderMap.get(note.folderUid) ?? null : null)
     },
 
-    async permanentlyDeleteNote(userUid: string, noteUid: string) {
+    async permanentlyDeleteNote(userUid: string, noteUid: string, requestId?: string | null) {
       const user = await requireUser(userUid)
       const deleted = await repository.permanentlyDeleteNote(user.id, noteUid)
       if (!deleted) {
         throw new HttpError(404, 40401, '绗旇涓嶅瓨鍦�')
       }
+      await logsService.record({
+        userId: user.id,
+        targetType: 'note',
+        targetUid: noteUid,
+        action: 'permanent_delete',
+        requestId,
+      })
       return { success: true as const }
     },
   }

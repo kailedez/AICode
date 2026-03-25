@@ -1,6 +1,7 @@
 import type { DatabaseService } from '../../database'
 import { buildFolderTree, collectFolderUids } from '../shared/helpers'
 import { HttpError } from '../shared/errors'
+import { createLogsService } from '../logs/service'
 import { createFoldersRepository } from './repository'
 
 function toFolderNode(folder: {
@@ -23,6 +24,7 @@ function toFolderNode(folder: {
 
 export function createFoldersService(store: DatabaseService) {
   const repository = createFoldersRepository(store)
+  const logsService = createLogsService(store)
 
   return {
     async getTree(userUid: string) {
@@ -35,17 +37,30 @@ export function createFoldersService(store: DatabaseService) {
       return buildFolderTree(graph.folders, graph.notes, user.id)
     },
 
-    async createFolder(userUid: string, input: { name: string; parentUid: string | null }) {
+    async createFolder(userUid: string, input: { name: string; parentUid: string | null }, requestId?: string | null) {
       const user = await repository.findActiveUserByUid(userUid)
       if (!user) {
         throw new HttpError(404, 40401, '鐢ㄦ埛涓嶅瓨鍦�')
       }
 
       const folder = await repository.createFolder(user.id, input)
+      await logsService.record({
+        userId: user.id,
+        targetType: 'folder',
+        targetUid: folder.uid,
+        action: 'create',
+        requestId,
+        detail: input,
+      })
       return toFolderNode(folder)
     },
 
-    async updateFolder(userUid: string, folderUid: string, input: { name?: string; sortOrder?: number; isExpanded?: boolean }) {
+    async updateFolder(
+      userUid: string,
+      folderUid: string,
+      input: { name?: string; sortOrder?: number; isExpanded?: boolean },
+      requestId?: string | null,
+    ) {
       const user = await repository.findActiveUserByUid(userUid)
       if (!user) {
         throw new HttpError(404, 40401, '鐢ㄦ埛涓嶅瓨鍦�')
@@ -56,10 +71,19 @@ export function createFoldersService(store: DatabaseService) {
         throw new HttpError(404, 40401, '鐩綍涓嶅瓨鍦�')
       }
 
+      await logsService.record({
+        userId: user.id,
+        targetType: 'folder',
+        targetUid: result.folder.uid,
+        action: 'update',
+        requestId,
+        detail: input,
+      })
+
       return toFolderNode(result.folder, result.noteCount)
     },
 
-    async deleteFolder(userUid: string, folderUid: string) {
+    async deleteFolder(userUid: string, folderUid: string, requestId?: string | null) {
       const user = await repository.findActiveUserByUid(userUid)
       if (!user) {
         throw new HttpError(404, 40401, '鐢ㄦ埛涓嶅瓨鍦�')
@@ -72,6 +96,16 @@ export function createFoldersService(store: DatabaseService) {
       }
 
       await repository.softDeleteFolders(user.id, folderUids)
+      await logsService.record({
+        userId: user.id,
+        targetType: 'folder',
+        targetUid: folderUid,
+        action: 'delete',
+        requestId,
+        detail: {
+          affectedFolderUids: folderUids,
+        },
+      })
       return { success: true as const }
     },
   }

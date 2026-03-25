@@ -1,5 +1,6 @@
 import type { DatabaseService } from '../../database'
 import { HttpError } from '../shared/errors'
+import { createLogsService } from '../logs/service'
 import { createMeRepository } from './repository'
 
 function toProfile(user: { uid: string; nickname: string; avatarUrl: string | null }) {
@@ -19,6 +20,7 @@ function toSettings(settings: { theme: string; defaultFolderUid: string | null }
 
 export function createMeService(store: DatabaseService) {
   const repository = createMeRepository(store)
+  const logsService = createLogsService(store)
 
   return {
     async getProfile(userUid: string) {
@@ -43,13 +45,27 @@ export function createMeService(store: DatabaseService) {
       return toSettings(settings)
     },
 
-    async updateSettings(userUid: string, input: { theme?: 'light' | 'dark' | 'system'; defaultFolderUid?: string | null }) {
+    async updateSettings(
+      userUid: string,
+      input: { theme?: 'light' | 'dark' | 'system'; defaultFolderUid?: string | null },
+      requestId?: string | null,
+    ) {
       const user = await repository.findActiveUserByUid(userUid)
       if (!user) {
         throw new HttpError(404, 40401, '鐢ㄦ埛涓嶅瓨鍦�')
       }
 
-      return toSettings(await repository.updateUserSettings(user.id, input))
+      const settings = await repository.updateUserSettings(user.id, input)
+      await logsService.record({
+        userId: user.id,
+        targetType: 'user_setting',
+        targetUid: user.uid,
+        action: 'update',
+        requestId,
+        detail: input,
+      })
+
+      return toSettings(settings)
     },
   }
 }

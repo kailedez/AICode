@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import type { DatabaseService } from '../../database'
 import { createUid, nowIso, plusHoursIso } from '../../utils'
 import { HttpError } from '../shared/errors'
+import { createLogsService } from '../logs/service'
 import { createAuthRepository } from './repository'
 
 const ACCESS_TOKEN_SECRET = process.env.NOTEFLOW_ACCESS_TOKEN_SECRET ?? 'noteflow-dev-access-secret'
@@ -128,9 +129,14 @@ function toSessionResponse(
 
 export function createAuthService(store: DatabaseService) {
   const repository = createAuthRepository(store)
+  const logsService = createLogsService(store)
 
   return {
-    async register(input: { email: string; password: string; nickname: string }, metadata: { ip: string | null; userAgent: string | null }) {
+    async register(
+      input: { email: string; password: string; nickname: string },
+      metadata: { ip: string | null; userAgent: string | null },
+      requestId?: string | null,
+    ) {
       const existingUser = await repository.findActiveUserByEmail(input.email)
       if (existingUser) {
         throw new HttpError(409, 40901, '璇ラ偖绠卞凡娉ㄥ唽')
@@ -156,10 +162,25 @@ export function createAuthService(store: DatabaseService) {
         expiredAt: plusHoursIso(REFRESH_TOKEN_TTL_HOURS),
       })
 
+      await logsService.record({
+        userId: user.id,
+        targetType: 'user',
+        targetUid: user.uid,
+        action: 'register',
+        requestId,
+        detail: {
+          email: user.email,
+        },
+      })
+
       return toSessionResponse(user, session, refreshToken)
     },
 
-    async login(input: { email: string; password: string }, metadata: { ip: string | null; userAgent: string | null }) {
+    async login(
+      input: { email: string; password: string },
+      metadata: { ip: string | null; userAgent: string | null },
+      requestId?: string | null,
+    ) {
       const user = await repository.findActiveUserByEmail(input.email)
       if (!user || !(await verifyPassword(input.password, user.passwordHash))) {
         throw new HttpError(401, 40101, '閭鎴栧瘑鐮侀敊璇�')
@@ -179,10 +200,21 @@ export function createAuthService(store: DatabaseService) {
         expiredAt: plusHoursIso(REFRESH_TOKEN_TTL_HOURS),
       })
 
+      await logsService.record({
+        userId: user.id,
+        targetType: 'session',
+        targetUid: session.sessionUid,
+        action: 'login',
+        requestId,
+        detail: {
+          userUid: user.uid,
+        },
+      })
+
       return toSessionResponse(user, session, refreshToken)
     },
 
-    async refresh(refreshToken: string) {
+    async refresh(refreshToken: string, requestId?: string | null) {
       const session = await repository.findActiveSessionByRefreshTokenHash(hashValue(refreshToken))
       if (!session) {
         throw new HttpError(401, 40101, 'refresh token 鏃犳晥鎴栧凡杩囨湡')
@@ -199,16 +231,34 @@ export function createAuthService(store: DatabaseService) {
         expiredAt: plusHoursIso(REFRESH_TOKEN_TTL_HOURS),
       })
 
+      await logsService.record({
+        userId: user.id,
+        targetType: 'session',
+        targetUid: updatedSession.sessionUid,
+        action: 'refresh',
+        requestId,
+        detail: {
+          userUid: user.uid,
+        },
+      })
+
       return toSessionResponse(user, updatedSession, nextRefreshToken)
     },
 
-    async logout(refreshToken: string) {
+    async logout(refreshToken: string, requestId?: string | null) {
       const session = await repository.findActiveSessionByRefreshTokenHash(hashValue(refreshToken))
       if (!session) {
         return { success: true as const }
       }
 
       await repository.revokeSession(session.sessionUid, nowIso())
+      await logsService.record({
+        userId: session.userId,
+        targetType: 'session',
+        targetUid: session.sessionUid,
+        action: 'logout',
+        requestId,
+      })
       return { success: true as const }
     },
 

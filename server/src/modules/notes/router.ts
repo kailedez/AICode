@@ -36,7 +36,7 @@ export function createNotesRouter(store: DatabaseService) {
   router.post('/notes', async (req, res, next) => {
     try {
       const payload = createNoteSchema.parse(req.body)
-      sendOk(res, await service.createNote(res.locals.currentUserUid as string, payload))
+      sendOk(res, await service.createNote(res.locals.currentUserUid as string, payload, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -45,7 +45,7 @@ export function createNotesRouter(store: DatabaseService) {
   router.put('/notes/:noteUid', async (req, res, next) => {
     try {
       const payload = updateNoteSchema.parse(req.body)
-      sendOk(res, await service.updateNote(res.locals.currentUserUid as string, req.params.noteUid, payload))
+      sendOk(res, await service.updateNote(res.locals.currentUserUid as string, req.params.noteUid, payload, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -54,7 +54,7 @@ export function createNotesRouter(store: DatabaseService) {
   router.put('/notes/:noteUid/content', async (req, res, next) => {
     try {
       const payload = saveNoteContentSchema.parse(req.body)
-      sendOk(res, await service.saveNoteContent(res.locals.currentUserUid as string, req.params.noteUid, payload))
+      sendOk(res, await service.saveNoteContent(res.locals.currentUserUid as string, req.params.noteUid, payload, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -63,7 +63,7 @@ export function createNotesRouter(store: DatabaseService) {
   router.post('/notes/:noteUid/restore', async (req, res, next) => {
     try {
       const payload = restoreRevisionSchema.parse(req.body)
-      sendOk(res, await service.restoreRevision(res.locals.currentUserUid as string, req.params.noteUid, payload.versionNo))
+      sendOk(res, await service.restoreRevision(res.locals.currentUserUid as string, req.params.noteUid, payload.versionNo, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -71,7 +71,7 @@ export function createNotesRouter(store: DatabaseService) {
 
   router.delete('/notes/:noteUid', async (req, res, next) => {
     try {
-      sendOk(res, await service.deleteNote(res.locals.currentUserUid as string, req.params.noteUid))
+      sendOk(res, await service.deleteNote(res.locals.currentUserUid as string, req.params.noteUid, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }

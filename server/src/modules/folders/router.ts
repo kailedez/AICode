@@ -19,7 +19,7 @@ export function createFoldersRouter(store: DatabaseService) {
   router.post('/folders', async (req, res, next) => {
     try {
       const payload = createFolderSchema.parse(req.body)
-      sendOk(res, await service.createFolder(res.locals.currentUserUid as string, payload))
+      sendOk(res, await service.createFolder(res.locals.currentUserUid as string, payload, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -28,7 +28,7 @@ export function createFoldersRouter(store: DatabaseService) {
   router.put('/folders/:folderUid', async (req, res, next) => {
     try {
       const payload = updateFolderSchema.parse(req.body)
-      sendOk(res, await service.updateFolder(res.locals.currentUserUid as string, req.params.folderUid, payload))
+      sendOk(res, await service.updateFolder(res.locals.currentUserUid as string, req.params.folderUid, payload, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -36,7 +36,7 @@ export function createFoldersRouter(store: DatabaseService) {
 
   router.delete('/folders/:folderUid', async (req, res, next) => {
     try {
-      sendOk(res, await service.deleteFolder(res.locals.currentUserUid as string, req.params.folderUid))
+      sendOk(res, await service.deleteFolder(res.locals.currentUserUid as string, req.params.folderUid, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }

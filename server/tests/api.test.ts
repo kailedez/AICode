@@ -44,6 +44,13 @@ describe('NoteFlow API', () => {
       .send({ refreshToken: refreshRes.body.data.refreshToken })
 
     expect(refreshAfterLogoutRes.status).toBe(401)
+
+    const authLogs = await store.prisma.operationLog.findMany({
+      where: {
+        action: { in: ['login', 'refresh', 'logout'] },
+      },
+    })
+    expect(authLogs.length).toBeGreaterThanOrEqual(3)
   })
 
   it('supports note revisions and recycle bin flows', async () => {
@@ -140,6 +147,15 @@ describe('NoteFlow API', () => {
 
     const dbStat = await stat(path.join(tempDir, 'noteflow.db'))
     expect(dbStat.isFile()).toBe(true)
+
+    const noteLogs = await store.prisma.operationLog.findMany({
+      where: {
+        action: {
+          in: ['create', 'save_content', 'restore_revision', 'delete', 'recover', 'permanent_delete'],
+        },
+      },
+    })
+    expect(noteLogs.length).toBeGreaterThanOrEqual(6)
   })
 
   it('supports register then authenticated access', async () => {
@@ -164,5 +180,12 @@ describe('NoteFlow API', () => {
 
     expect(meRes.status).toBe(200)
     expect(meRes.body.data.nickname).toBe('New User')
+
+    const registerLogs = await store.prisma.operationLog.findMany({
+      where: {
+        action: 'register',
+      },
+    })
+    expect(registerLogs.length).toBeGreaterThanOrEqual(1)
   })
 })

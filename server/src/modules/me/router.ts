@@ -27,7 +27,7 @@ export function createMeRouter(store: DatabaseService) {
   router.put('/me/settings', async (req, res, next) => {
     try {
       const payload = updateSettingsSchema.parse(req.body)
-      sendOk(res, await service.updateSettings(res.locals.currentUserUid as string, payload))
+      sendOk(res, await service.updateSettings(res.locals.currentUserUid as string, payload, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }

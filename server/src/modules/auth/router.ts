@@ -18,7 +18,7 @@ export function createAuthRouter(store: DatabaseService) {
   router.post('/auth/register', async (req, res, next) => {
     try {
       const payload = registerSchema.parse(req.body)
-      sendOk(res, await service.register(payload, getRequestMetadata(req)))
+      sendOk(res, await service.register(payload, getRequestMetadata(req), res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -27,7 +27,7 @@ export function createAuthRouter(store: DatabaseService) {
   router.post('/auth/login', async (req, res, next) => {
     try {
       const payload = loginSchema.parse(req.body)
-      sendOk(res, await service.login(payload, getRequestMetadata(req)))
+      sendOk(res, await service.login(payload, getRequestMetadata(req), res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -36,7 +36,7 @@ export function createAuthRouter(store: DatabaseService) {
   router.post('/auth/refresh', async (req, res, next) => {
     try {
       const payload = refreshSchema.parse(req.body)
-      sendOk(res, await service.refresh(payload.refreshToken))
+      sendOk(res, await service.refresh(payload.refreshToken, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -45,7 +45,7 @@ export function createAuthRouter(store: DatabaseService) {
   router.post('/auth/logout', async (req, res, next) => {
     try {
       const payload = logoutSchema.parse(req.body)
-      sendOk(res, await service.logout(payload.refreshToken))
+      sendOk(res, await service.logout(payload.refreshToken, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }

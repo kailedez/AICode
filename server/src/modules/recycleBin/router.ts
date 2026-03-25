@@ -17,7 +17,7 @@ export function createRecycleBinRouter(store: DatabaseService) {
 
   router.post('/recycle-bin/notes/:noteUid/recover', async (req, res, next) => {
     try {
-      sendOk(res, await service.recoverNote(res.locals.currentUserUid as string, req.params.noteUid))
+      sendOk(res, await service.recoverNote(res.locals.currentUserUid as string, req.params.noteUid, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
@@ -25,7 +25,7 @@ export function createRecycleBinRouter(store: DatabaseService) {
 
   router.delete('/recycle-bin/notes/:noteUid', async (req, res, next) => {
     try {
-      sendOk(res, await service.permanentlyDeleteNote(res.locals.currentUserUid as string, req.params.noteUid))
+      sendOk(res, await service.permanentlyDeleteNote(res.locals.currentUserUid as string, req.params.noteUid, res.locals.requestId as string))
     } catch (error) {
       next(error)
     }
