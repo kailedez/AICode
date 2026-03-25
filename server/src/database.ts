@@ -1,6 +1,4 @@
-import { mkdir } from 'node:fs/promises'
-import path from 'node:path'
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
 import { createAppConfig } from './config'
 import { CORRUPTED_FOLDER_NAMES, CORRUPTED_NOTE_TITLES, DEMO_FOLDERS, DEMO_NOTES, DEMO_USER_UID } from './seed'
@@ -16,115 +14,6 @@ export function deserializeJson(value: string | null) {
     return JSON.parse(value) as Record<string, unknown>
   } catch {
     return null
-  }
-}
-
-async function initializeSqliteSchema(prisma: PrismaClient) {
-  const statements = [
-    `CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      uid TEXT NOT NULL UNIQUE,
-      email TEXT UNIQUE,
-      mobile TEXT,
-      passwordHash TEXT,
-      nickname TEXT NOT NULL,
-      avatarUrl TEXT,
-      status INTEGER NOT NULL,
-      lastLoginAt DATETIME,
-      createdAt DATETIME NOT NULL,
-      updatedAt DATETIME NOT NULL,
-      deletedAt DATETIME
-    )`,
-    `CREATE TABLE IF NOT EXISTS user_settings (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER NOT NULL UNIQUE,
-      theme TEXT NOT NULL,
-      defaultFolderUid TEXT,
-      editorPreferences TEXT,
-      createdAt DATETIME NOT NULL,
-      updatedAt DATETIME NOT NULL,
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )`,
-    `CREATE TABLE IF NOT EXISTS folders (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      uid TEXT NOT NULL UNIQUE,
-      userId INTEGER NOT NULL,
-      parentUid TEXT,
-      ancestorPath TEXT,
-      name TEXT NOT NULL,
-      sortOrder INTEGER NOT NULL,
-      isExpanded BOOLEAN NOT NULL,
-      createdAt DATETIME NOT NULL,
-      updatedAt DATETIME NOT NULL,
-      deletedAt DATETIME,
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )`,
-    `CREATE INDEX IF NOT EXISTS folders_user_parent_deleted_idx ON folders(userId, parentUid, deletedAt)`,
-    `CREATE TABLE IF NOT EXISTS notes (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      uid TEXT NOT NULL UNIQUE,
-      userId INTEGER NOT NULL,
-      folderUid TEXT,
-      title TEXT NOT NULL,
-      summary TEXT,
-      contentJson TEXT,
-      contentHtml TEXT,
-      contentText TEXT,
-      wordCount INTEGER NOT NULL,
-      status INTEGER NOT NULL,
-      revisionNo INTEGER NOT NULL DEFAULT 0,
-      lastEditedAt DATETIME NOT NULL,
-      createdAt DATETIME NOT NULL,
-      updatedAt DATETIME NOT NULL,
-      deletedAt DATETIME,
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )`,
-    `CREATE INDEX IF NOT EXISTS notes_user_folder_updated_idx ON notes(userId, folderUid, updatedAt)`,
-    `CREATE INDEX IF NOT EXISTS notes_user_status_updated_idx ON notes(userId, status, updatedAt)`,
-    `CREATE TABLE IF NOT EXISTS note_revisions (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      noteUid TEXT NOT NULL,
-      userId INTEGER NOT NULL,
-      versionNo INTEGER NOT NULL,
-      title TEXT NOT NULL,
-      contentJson TEXT,
-      contentHtml TEXT,
-      contentText TEXT,
-      createdAt DATETIME NOT NULL,
-      createdBy INTEGER NOT NULL,
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )`,
-    `CREATE UNIQUE INDEX IF NOT EXISTS note_revisions_note_version_idx ON note_revisions(noteUid, versionNo)`,
-    `CREATE TABLE IF NOT EXISTS user_sessions (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      sessionUid TEXT NOT NULL UNIQUE,
-      userId INTEGER NOT NULL,
-      refreshTokenHash TEXT NOT NULL,
-      clientType TEXT NOT NULL,
-      deviceInfo TEXT,
-      ip TEXT,
-      expiredAt DATETIME NOT NULL,
-      revokedAt DATETIME,
-      createdAt DATETIME NOT NULL,
-      updatedAt DATETIME NOT NULL,
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )`,
-    `CREATE INDEX IF NOT EXISTS user_sessions_user_revoked_expired_idx ON user_sessions(userId, revokedAt, expiredAt)`,
-    `CREATE TABLE IF NOT EXISTS operation_logs (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER NOT NULL,
-      targetType TEXT NOT NULL,
-      targetUid TEXT NOT NULL,
-      action TEXT NOT NULL,
-      requestId TEXT,
-      detail TEXT,
-      createdAt DATETIME NOT NULL,
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )`,
-  ]
-
-  for (const statement of statements) {
-    await prisma.$executeRawUnsafe(statement)
   }
 }
 
@@ -235,28 +124,48 @@ async function repairSeedEncoding(prisma: PrismaClient) {
   }
 }
 
+function toInitializationError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return new Error('Failed to initialize Neon PostgreSQL database.')
+  }
+
+  return new Error(
+    [
+      'Failed to initialize Neon PostgreSQL database.',
+      'Make sure DATABASE_URL uses the pooled Neon connection string and that the schema has been applied with DIRECT_URL.',
+      "Run 'npm run db:push' after setting your Neon env vars.",
+      `Original error: ${error.message}`,
+    ].join(' '),
+  )
+}
+
 export class DatabaseService {
   readonly prisma: PrismaClient
-  private readonly rootDir: string
   readonly config
 
   constructor(rootDir: string) {
-    this.rootDir = rootDir
     this.config = createAppConfig(rootDir)
-    const databasePath = this.config.database.filePath
+
+    if (!this.config.database.url) {
+      throw new Error('DATABASE_URL is required before starting the Neon PostgreSQL backend.')
+    }
+
     this.prisma = new PrismaClient({
-      adapter: new PrismaBetterSqlite3({
-        url: databasePath.replace(/\//g, path.sep),
+      adapter: new PrismaNeon({
+        connectionString: this.config.database.url,
       }),
     })
   }
 
   async ensure() {
-    await mkdir(this.rootDir, { recursive: true })
     await this.prisma.$connect()
-    await initializeSqliteSchema(this.prisma)
-    await seedDatabase(this.prisma)
-    await repairSeedEncoding(this.prisma)
+
+    try {
+      await seedDatabase(this.prisma)
+      await repairSeedEncoding(this.prisma)
+    } catch (error) {
+      throw toInitializationError(error)
+    }
   }
 
   async disconnect() {

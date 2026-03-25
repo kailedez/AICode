@@ -1,14 +1,12 @@
-import { mkdtemp, stat } from 'node:fs/promises'
-import os from 'node:os'
-import path from 'node:path'
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
 import { createApp } from '../src/app'
 
-describe('NoteFlow API', () => {
+const describeIfDatabase = process.env.NOTEFLOW_RUN_DATABASE_TESTS === '1' ? describe : describe.skip
+
+describeIfDatabase('NoteFlow API', () => {
   it('supports auth session lifecycle and protected access', async () => {
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), 'noteflow-auth-'))
-    const { app, store } = createApp(tempDir)
+    const { app, store } = createApp()
     await store.ensure()
 
     const loginRes = await request(app)
@@ -54,8 +52,7 @@ describe('NoteFlow API', () => {
   })
 
   it('supports note revisions and recycle bin flows', async () => {
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), 'noteflow-note-'))
-    const { app, store } = createApp(tempDir)
+    const { app, store } = createApp()
     await store.ensure()
 
     const loginRes = await request(app)
@@ -145,9 +142,6 @@ describe('NoteFlow API', () => {
       .set(authHeader)
     expect(permanentDeleteRes.status).toBe(200)
 
-    const dbStat = await stat(path.join(tempDir, 'noteflow.db'))
-    expect(dbStat.isFile()).toBe(true)
-
     const noteLogs = await store.prisma.operationLog.findMany({
       where: {
         action: {
@@ -159,8 +153,7 @@ describe('NoteFlow API', () => {
   })
 
   it('supports register then authenticated access', async () => {
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), 'noteflow-register-'))
-    const { app, store } = createApp(tempDir)
+    const { app, store } = createApp()
     await store.ensure()
 
     const registerRes = await request(app)

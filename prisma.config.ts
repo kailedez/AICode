@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { defineConfig } from 'prisma/config'
 
 export default defineConfig({
@@ -6,6 +7,6 @@ export default defineConfig({
     path: 'server/prisma/migrations',
   },
   datasource: {
-    url: process.env.DATABASE_URL ?? 'file:./server/data/noteflow.db',
+    url: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? '',
   },
 })

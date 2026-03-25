@@ -1,9 +1,7 @@
-import path from 'node:path'
-
 export interface DatabaseConfig {
-  provider: 'sqlite'
+  provider: 'postgresql'
   url: string
-  filePath: string
+  directUrl: string
 }
 
 export interface AppConfig {
@@ -11,25 +9,17 @@ export interface AppConfig {
   database: DatabaseConfig
 }
 
-function resolveSqliteFilePath(rootDir: string, databaseUrl: string | undefined) {
-  if (!databaseUrl) {
-    return path.join(rootDir, 'noteflow.db')
-  }
-
-  return databaseUrl.startsWith('file:')
-    ? databaseUrl.slice('file:'.length)
-    : databaseUrl
-}
-
 export function createAppConfig(rootDir: string): AppConfig {
-  const filePath = resolveSqliteFilePath(rootDir, process.env.DATABASE_URL)
+  void rootDir
+  const url = process.env.DATABASE_URL ?? ''
+  const directUrl = process.env.DIRECT_URL ?? url
 
   return {
     port: Number(process.env.PORT ?? 3001),
     database: {
-      provider: 'sqlite',
-      url: `file:${filePath.replace(/\\/g, '/')}`,
-      filePath,
+      provider: 'postgresql',
+      url,
+      directUrl,
     },
   }
 }
