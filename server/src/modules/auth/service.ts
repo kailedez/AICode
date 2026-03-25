@@ -139,7 +139,7 @@ export function createAuthService(store: DatabaseService) {
     ) {
       const existingUser = await repository.findActiveUserByEmail(input.email)
       if (existingUser) {
-        throw new HttpError(409, 40901, '璇ラ偖绠卞凡娉ㄥ唽')
+        throw new HttpError(409, 40901, '邮箱已被注册')
       }
 
       const now = nowIso()
@@ -183,7 +183,7 @@ export function createAuthService(store: DatabaseService) {
     ) {
       const user = await repository.findActiveUserByEmail(input.email)
       if (!user || !(await verifyPassword(input.password, user.passwordHash))) {
-        throw new HttpError(401, 40101, '閭鎴栧瘑鐮侀敊璇�')
+        throw new HttpError(401, 40101, '邮箱或密码错误')
       }
 
       const now = nowIso()
@@ -217,12 +217,12 @@ export function createAuthService(store: DatabaseService) {
     async refresh(refreshToken: string, requestId?: string | null) {
       const session = await repository.findActiveSessionByRefreshTokenHash(hashValue(refreshToken))
       if (!session) {
-        throw new HttpError(401, 40101, 'refresh token 鏃犳晥鎴栧凡杩囨湡')
+        throw new HttpError(401, 40101, 'refresh token 无效或已过期')
       }
 
       const user = await repository.findActiveUserById(session.userId)
       if (!user) {
-        throw new HttpError(401, 40101, 'refresh token 鏃犳晥鎴栧凡杩囨湡')
+        throw new HttpError(401, 40101, 'refresh token 无效或已过期')
       }
 
       const nextRefreshToken = createRefreshToken()
@@ -265,17 +265,17 @@ export function createAuthService(store: DatabaseService) {
     async authenticateAccessToken(token: string | null | undefined) {
       const parsed = parseAccessToken(token)
       if (!parsed || parsed.exp <= Math.floor(Date.now() / 1000)) {
-        throw new HttpError(401, 40101, '鏈櫥褰曟垨 token 鏃犳晥')
+        throw new HttpError(401, 40101, '未登录或 token 无效')
       }
 
       const session = await repository.findActiveSessionByUid(parsed.sessionUid)
       if (!session || session.userId <= 0) {
-        throw new HttpError(401, 40101, '鏈櫥褰曟垨 token 鏃犳晥')
+        throw new HttpError(401, 40101, '未登录或 token 无效')
       }
 
       const user = await repository.findActiveUserByUid(parsed.userUid)
       if (!user || user.id !== session.userId) {
-        throw new HttpError(401, 40101, '鏈櫥褰曟垨 token 鏃犳晥')
+        throw new HttpError(401, 40101, '未登录或 token 无效')
       }
 
       return user
