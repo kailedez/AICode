@@ -2,6 +2,8 @@ import { mkdir } from 'node:fs/promises'
 import path from 'node:path'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 import { PrismaClient } from '@prisma/client'
+import { createAppConfig } from './config'
+import { CORRUPTED_FOLDER_NAMES, CORRUPTED_NOTE_TITLES, DEMO_FOLDERS, DEMO_NOTES, DEMO_USER_UID } from './seed'
 import { createUid, nowIso, stripHtml, summarize } from './utils'
 
 export function serializeJson(value: Record<string, unknown> | null) {
@@ -130,25 +132,11 @@ async function seedDatabase(prisma: PrismaClient) {
   if ((await prisma.user.count()) > 0) return
 
   const createdAt = nowIso()
-  const productFolderUid = createUid('fld')
-  const researchFolderUid = createUid('fld')
-  const sprintFolderUid = createUid('fld')
-  const captureFolderUid = createUid('fld')
-
-  const noteOneHtml =
-    '<h1>NoteFlow 杩唬鏂瑰悜</h1><p>鍥寸粫鐩綍缁勭粐銆佽嚜鍔ㄤ繚瀛樺拰鍦ㄧ嚎鍚屾寤虹珛涓€鑷翠綋楠屻€?/p><ul><li><p>鏄庣‘ API 鏁版嵁缁撴瀯</p></li><li><p>寤虹珛淇濆瓨鐘舵€佹彁绀?/p></li><li><p>閲嶅仛淇℃伅灞傜骇</p></li></ul>'
-  const noteTwoHtml =
-    '<h2>绔炲搧瑙傚療</h2><p>浼樼绗旇浜у搧閫氬父鎶婃悳绱€佹敹钘忋€佹渶杩戞洿鏂版斁鍦ㄧ涓€灞忓彲瑙佽寖鍥村唴銆?/p><blockquote><p>淇℃伅鏋舵瀯姣旇瑙夌粏鑺傛洿鍏堝喅瀹氫笓涓氭劅銆?/p></blockquote>'
-  const noteThreeHtml =
-    '<p>浠婂ぉ鏁寸悊浜嗘柊鐨勭紪杈戝櫒浜や簰锛?/p><ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox" checked="checked"><span></span></label><div><p>鏍囬鐙珛淇濆瓨</p></div></li><li data-type="taskItem" data-checked="false"><label><input type="checkbox"><span></span></label><div><p>琛ュ厖鍘嗗彶鐗堟湰鍏ュ彛</p></div></li></ul>'
-
-  const noteOneText = stripHtml(noteOneHtml)
-  const noteTwoText = stripHtml(noteTwoHtml)
-  const noteThreeText = stripHtml(noteThreeHtml)
+  const folderUidMap = new Map(DEMO_FOLDERS.map((item) => [item.key, createUid('fld')]))
 
   await prisma.user.create({
     data: {
-      uid: 'usr_demo',
+      uid: DEMO_USER_UID,
       email: 'demo@example.com',
       mobile: null,
       passwordHash: 'noteflow123',
@@ -161,118 +149,101 @@ async function seedDatabase(prisma: PrismaClient) {
       settings: {
         create: {
           theme: 'system',
-          defaultFolderUid: captureFolderUid,
+          defaultFolderUid: folderUidMap.get('capture') ?? null,
           editorPreferences: null,
           createdAt: new Date(createdAt),
           updatedAt: new Date(createdAt),
         },
       },
       folders: {
-        create: [
-          {
-            uid: productFolderUid,
-            parentUid: null,
-            ancestorPath: null,
-            name: '浜у搧璁捐',
-            sortOrder: 10,
-            isExpanded: true,
-            createdAt: new Date(createdAt),
-            updatedAt: new Date(createdAt),
-          },
-          {
-            uid: researchFolderUid,
-            parentUid: productFolderUid,
-            ancestorPath: productFolderUid,
-            name: '绔炲搧鐮旂┒',
-            sortOrder: 20,
-            isExpanded: true,
-            createdAt: new Date(createdAt),
-            updatedAt: new Date(createdAt),
-          },
-          {
-            uid: sprintFolderUid,
-            parentUid: productFolderUid,
-            ancestorPath: productFolderUid,
-            name: 'Sprint 瑙勫垝',
-            sortOrder: 30,
-            isExpanded: true,
-            createdAt: new Date(createdAt),
-            updatedAt: new Date(createdAt),
-          },
-          {
-            uid: captureFolderUid,
-            parentUid: null,
-            ancestorPath: null,
-            name: '鐏垫劅閫熻',
-            sortOrder: 40,
-            isExpanded: true,
-            createdAt: new Date(createdAt),
-            updatedAt: new Date(createdAt),
-          },
-        ],
+        create: DEMO_FOLDERS.map((folder) => ({
+          uid: folderUidMap.get(folder.key) ?? createUid('fld'),
+          parentUid: folder.parentKey ? folderUidMap.get(folder.parentKey) ?? null : null,
+          ancestorPath: folder.parentKey ? folderUidMap.get(folder.parentKey) ?? null : null,
+          name: folder.name,
+          sortOrder: folder.sortOrder,
+          isExpanded: true,
+          createdAt: new Date(createdAt),
+          updatedAt: new Date(createdAt),
+        })),
       },
       notes: {
-        create: [
-          {
+        create: DEMO_NOTES.map((note) => {
+          const contentText = stripHtml(note.contentHtml)
+          return {
             uid: createUid('note'),
-            folderUid: sprintFolderUid,
-            title: 'NoteFlow 杩唬鏂瑰悜',
-            summary: summarize(noteOneText),
+            folderUid: folderUidMap.get(note.folderKey) ?? null,
+            title: note.title,
+            summary: summarize(contentText),
             contentJson: null,
-            contentHtml: noteOneHtml,
-            contentText: noteOneText,
-            wordCount: noteOneText.length,
+            contentHtml: note.contentHtml,
+            contentText,
+            wordCount: contentText.length,
             status: 1,
             revisionNo: 0,
             lastEditedAt: new Date(createdAt),
             createdAt: new Date(createdAt),
             updatedAt: new Date(createdAt),
-          },
-          {
-            uid: createUid('note'),
-            folderUid: researchFolderUid,
-            title: '绔炲搧瑙傚療',
-            summary: summarize(noteTwoText),
-            contentJson: null,
-            contentHtml: noteTwoHtml,
-            contentText: noteTwoText,
-            wordCount: noteTwoText.length,
-            status: 1,
-            revisionNo: 0,
-            lastEditedAt: new Date(createdAt),
-            createdAt: new Date(createdAt),
-            updatedAt: new Date(createdAt),
-          },
-          {
-            uid: createUid('note'),
-            folderUid: captureFolderUid,
-            title: '浠婃棩閫熻',
-            summary: summarize(noteThreeText),
-            contentJson: null,
-            contentHtml: noteThreeHtml,
-            contentText: noteThreeText,
-            wordCount: noteThreeText.length,
-            status: 1,
-            revisionNo: 0,
-            lastEditedAt: new Date(createdAt),
-            createdAt: new Date(createdAt),
-            updatedAt: new Date(createdAt),
-          },
-        ],
+          }
+        }),
       },
     },
   })
 }
 
+async function repairSeedEncoding(prisma: PrismaClient) {
+  const demoUser = await prisma.user.findFirst({
+    where: {
+      uid: DEMO_USER_UID,
+      deletedAt: null,
+    },
+  })
+
+  if (!demoUser) return
+
+  for (const [corruptedName, correctName] of CORRUPTED_FOLDER_NAMES) {
+    await prisma.folder.updateMany({
+      where: {
+        userId: demoUser.id,
+        name: corruptedName,
+      },
+      data: {
+        name: correctName,
+      },
+    })
+  }
+
+  const noteMap = new Map(DEMO_NOTES.map((item) => [item.title, item]))
+  for (const [corruptedTitle, correctTitle] of CORRUPTED_NOTE_TITLES) {
+    const definition = noteMap.get(correctTitle)
+    if (!definition) continue
+
+    const contentText = stripHtml(definition.contentHtml)
+    await prisma.note.updateMany({
+      where: {
+        userId: demoUser.id,
+        title: corruptedTitle,
+      },
+      data: {
+        title: definition.title,
+        summary: summarize(contentText),
+        contentHtml: definition.contentHtml,
+        contentText,
+        wordCount: contentText.length,
+      },
+    })
+  }
+}
+
 export class DatabaseService {
   readonly prisma: PrismaClient
   private readonly rootDir: string
+  readonly config
 
   constructor(rootDir: string) {
     this.rootDir = rootDir
-    const databasePath = (process.env.DATABASE_URL?.startsWith('file:')
-      ? process.env.DATABASE_URL.slice('file:'.length)
-      : process.env.DATABASE_URL) ?? path.join(rootDir, 'noteflow.db')
+    this.config = createAppConfig(rootDir)
+    const databasePath = this.config.database.filePath
     this.prisma = new PrismaClient({
       adapter: new PrismaBetterSqlite3({
         url: databasePath.replace(/\//g, path.sep),
@@ -285,6 +256,7 @@ export class DatabaseService {
     await this.prisma.$connect()
     await initializeSqliteSchema(this.prisma)
     await seedDatabase(this.prisma)
+    await repairSeedEncoding(this.prisma)
   }
 
   async disconnect() {
