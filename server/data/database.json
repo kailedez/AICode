@@ -1,0 +1,1290 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "uid": "usr_demo",
+      "email": "demo@example.com",
+      "mobile": null,
+      "passwordHash": "noteflow123",
+      "nickname": "Yuki",
+      "avatarUrl": null,
+      "status": 1,
+      "lastLoginAt": "2026-03-24T18:19:27.809Z",
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T18:19:27.809Z",
+      "deletedAt": null
+    },
+    {
+      "id": 2,
+      "uid": "usr_b0cc35e4-812e-4e80-96ab-52b699c20f4a",
+      "email": "newuser_8020aeb3@example.com",
+      "mobile": null,
+      "passwordHash": "abcdef123",
+      "nickname": "Fresh User",
+      "avatarUrl": null,
+      "status": 1,
+      "lastLoginAt": "2026-03-24T17:28:28.236Z",
+      "createdAt": "2026-03-24T17:28:28.236Z",
+      "updatedAt": "2026-03-24T17:28:28.236Z",
+      "deletedAt": null
+    }
+  ],
+  "userSettings": [
+    {
+      "id": 1,
+      "userId": 1,
+      "theme": "system",
+      "defaultFolderUid": "fld_3bef0311-717e-4913-baed-2ebfafb63aec",
+      "editorPreferences": null,
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T18:17:47.171Z"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "theme": "system",
+      "defaultFolderUid": null,
+      "editorPreferences": null,
+      "createdAt": "2026-03-24T17:28:28.236Z",
+      "updatedAt": "2026-03-24T17:28:28.236Z"
+    }
+  ],
+  "folders": [
+    {
+      "id": 1,
+      "uid": "fld_59b7349a-18f4-4f2d-95c1-82ad97ebe53c",
+      "userId": 1,
+      "parentUid": null,
+      "name": "产品设计",
+      "sortOrder": 10,
+      "isExpanded": true,
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T16:50:20.045Z",
+      "deletedAt": null
+    },
+    {
+      "id": 2,
+      "uid": "fld_c1100651-508e-436f-a3f9-c10999571a80",
+      "userId": 1,
+      "parentUid": "fld_59b7349a-18f4-4f2d-95c1-82ad97ebe53c",
+      "name": "竞品研究",
+      "sortOrder": 20,
+      "isExpanded": true,
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T16:50:20.045Z",
+      "deletedAt": null
+    },
+    {
+      "id": 3,
+      "uid": "fld_37788887-b6e5-42ca-9c32-2d1fcfdb7cf3",
+      "userId": 1,
+      "parentUid": "fld_59b7349a-18f4-4f2d-95c1-82ad97ebe53c",
+      "name": "Sprint 规划",
+      "sortOrder": 30,
+      "isExpanded": true,
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T16:50:20.045Z",
+      "deletedAt": null
+    },
+    {
+      "id": 4,
+      "uid": "fld_3bef0311-717e-4913-baed-2ebfafb63aec",
+      "userId": 1,
+      "parentUid": null,
+      "name": "灵感速记",
+      "sortOrder": 40,
+      "isExpanded": true,
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T16:50:20.045Z",
+      "deletedAt": null
+    },
+    {
+      "id": 5,
+      "uid": "fld_c7afa3cb-90d1-49a6-947b-d0297127561a",
+      "userId": 1,
+      "parentUid": null,
+      "name": "我的笔记",
+      "sortOrder": 50,
+      "isExpanded": true,
+      "createdAt": "2026-03-24T18:18:22.262Z",
+      "updatedAt": "2026-03-24T18:18:22.262Z",
+      "deletedAt": null
+    }
+  ],
+  "notes": [
+    {
+      "id": 1,
+      "uid": "note_cb73e8eb-5d02-4909-8f7f-3ee9252d9e40",
+      "userId": 1,
+      "folderUid": "fld_37788887-b6e5-42ca-9c32-2d1fcfdb7cf3",
+      "title": "NoteFlow 迭代方向",
+      "summary": "NoteFlow 迭代方向\n\n围绕目录组织、自动保存和在线同步建立一致体验。\n\n\n\n\n\n明确 API 数据结构\n\n\n\n建立保存状态提示\n\n\n\n重做信息层级\n\n",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "NoteFlow 迭代方向"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "围绕目录组织、自动保存和在线同步建立一致体验。"
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "明确 API 数据结构"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "建立保存状态提示"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "重做信息层级"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "contentHtml": "<h1>NoteFlow 迭代方向</h1><p>围绕目录组织、自动保存和在线同步建立一致体验。</p><ul><li><p>明确 API 数据结构</p></li><li><p>建立保存状态提示</p></li><li><p>重做信息层级</p></li></ul><p></p>",
+      "contentText": "NoteFlow 迭代方向\n\n围绕目录组织、自动保存和在线同步建立一致体验。\n\n\n\n\n\n明确 API 数据结构\n\n\n\n建立保存状态提示\n\n\n\n重做信息层级\n\n",
+      "wordCount": 47,
+      "status": 1,
+      "lastEditedAt": "2026-03-24T18:05:03.055Z",
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T18:05:03.055Z",
+      "deletedAt": null
+    },
+    {
+      "id": 2,
+      "uid": "note_7a5f3187-99ec-4763-abb7-58c435b02ce1",
+      "userId": 1,
+      "folderUid": "fld_c1100651-508e-436f-a3f9-c10999571a80",
+      "title": "竞品观察",
+      "summary": "竞品观察 优秀笔记产品通常把搜索、收藏、最近更新放在第一屏可见范围内。 信息架构比视觉细节更先决定专业感。",
+      "contentJson": null,
+      "contentHtml": "<h2>竞品观察</h2><p>优秀笔记产品通常把搜索、收藏、最近更新放在第一屏可见范围内。</p><blockquote><p>信息架构比视觉细节更先决定专业感。</p></blockquote>",
+      "contentText": "竞品观察 优秀笔记产品通常把搜索、收藏、最近更新放在第一屏可见范围内。 信息架构比视觉细节更先决定专业感。",
+      "wordCount": 53,
+      "status": 1,
+      "lastEditedAt": "2026-03-24T16:50:20.045Z",
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T16:50:20.045Z",
+      "deletedAt": null
+    },
+    {
+      "id": 3,
+      "uid": "note_4fee50f1-d221-4469-b099-cf8ce8a4cc35",
+      "userId": 1,
+      "folderUid": "fld_3bef0311-717e-4913-baed-2ebfafb63aec",
+      "title": "今日速记",
+      "summary": "今天整理了新的编辑器交互： 标题独立保存 补充历史版本入口",
+      "contentJson": null,
+      "contentHtml": "<p>今天整理了新的编辑器交互：</p><ul data-type=\"taskList\"><li data-type=\"taskItem\" data-checked=\"true\"><label><input type=\"checkbox\" checked=\"checked\"><span></span></label><div><p>标题独立保存</p></div></li><li data-type=\"taskItem\" data-checked=\"false\"><label><input type=\"checkbox\"><span></span></label><div><p>补充历史版本入口</p></div></li></ul>",
+      "contentText": "今天整理了新的编辑器交互： 标题独立保存 补充历史版本入口",
+      "wordCount": 29,
+      "status": 1,
+      "lastEditedAt": "2026-03-24T16:50:20.045Z",
+      "createdAt": "2026-03-24T16:50:20.045Z",
+      "updatedAt": "2026-03-24T16:50:20.045Z",
+      "deletedAt": null
+    },
+    {
+      "id": 4,
+      "uid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "folderUid": "fld_c7afa3cb-90d1-49a6-947b-d0297127561a",
+      "title": "当日心得",
+      "summary": "当日心得\n\n还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "当日心得"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<h1>当日心得</h1><p>还不错的尝试</p><p>以后继续试试看</p><p>AI编码很有意思</p>",
+      "contentText": "当日心得\n\n还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "wordCount": 24,
+      "status": 1,
+      "lastEditedAt": "2026-03-24T18:19:53.029Z",
+      "createdAt": "2026-03-24T18:18:27.586Z",
+      "updatedAt": "2026-03-24T18:19:53.029Z",
+      "deletedAt": null
+    }
+  ],
+  "noteRevisions": [
+    {
+      "id": 1,
+      "noteUid": "note_cb73e8eb-5d02-4909-8f7f-3ee9252d9e40",
+      "userId": 1,
+      "versionNo": 1,
+      "title": "NoteFlow 迭代方向",
+      "contentJson": null,
+      "contentHtml": "<h1>NoteFlow 迭代方向</h1><p>围绕目录组织、自动保存和在线同步建立一致体验。</p><ul><li><p>明确 API 数据结构</p></li><li><p>建立保存状态提示</p></li><li><p>重做信息层级</p></li></ul>",
+      "contentText": "NoteFlow 迭代方向 围绕目录组织、自动保存和在线同步建立一致体验。 明确 API 数据结构 建立保存状态提示 重做信息层级",
+      "createdAt": "2026-03-24T18:05:03.055Z",
+      "createdBy": 1
+    },
+    {
+      "id": 2,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 1,
+      "title": "未命名笔记",
+      "contentJson": null,
+      "contentHtml": "",
+      "contentText": "",
+      "createdAt": "2026-03-24T18:18:39.197Z",
+      "createdBy": 1
+    },
+    {
+      "id": 3,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 2,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的cang's"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的cang's</p>",
+      "contentText": "还不错的cang's",
+      "createdAt": "2026-03-24T18:18:40.250Z",
+      "createdBy": 1
+    },
+    {
+      "id": 4,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 3,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的can's"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的can's</p>",
+      "contentText": "还不错的can's",
+      "createdAt": "2026-03-24T18:18:42.099Z",
+      "createdBy": 1
+    },
+    {
+      "id": 5,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 4,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的can'shi"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的can'shi</p>",
+      "contentText": "还不错的can'shi",
+      "createdAt": "2026-03-24T18:18:43.869Z",
+      "createdBy": 1
+    },
+    {
+      "id": 6,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 5,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的cang'shi"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的cang'shi</p>",
+      "contentText": "还不错的cang'shi",
+      "createdAt": "2026-03-24T18:18:44.865Z",
+      "createdBy": 1
+    },
+    {
+      "id": 7,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 6,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p>",
+      "contentText": "还不错的尝试",
+      "createdAt": "2026-03-24T18:18:45.536Z",
+      "createdBy": 1
+    },
+    {
+      "id": 8,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 7,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p></p>",
+      "contentText": "还不错的尝试\n\n",
+      "createdAt": "2026-03-24T18:18:47.494Z",
+      "createdBy": 1
+    },
+    {
+      "id": 9,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 8,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后</p>",
+      "contentText": "还不错的尝试\n\n以后",
+      "createdAt": "2026-03-24T18:18:50.046Z",
+      "createdBy": 1
+    },
+    {
+      "id": 10,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 9,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续</p>",
+      "contentText": "还不错的尝试\n\n以后继续",
+      "createdAt": "2026-03-24T18:18:51.336Z",
+      "createdBy": 1
+    },
+    {
+      "id": 11,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 10,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续shi'sh'k"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续shi'sh'k</p>",
+      "contentText": "还不错的尝试\n\n以后继续shi'sh'k",
+      "createdAt": "2026-03-24T18:18:51.851Z",
+      "createdBy": 1
+    },
+    {
+      "id": 12,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 11,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看",
+      "createdAt": "2026-03-24T18:18:52.380Z",
+      "createdBy": 1
+    },
+    {
+      "id": 13,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 12,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph"
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p></p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\n",
+      "createdAt": "2026-03-24T18:18:52.988Z",
+      "createdBy": 1
+    },
+    {
+      "id": 14,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 13,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AI</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAI",
+      "createdAt": "2026-03-24T18:18:54.046Z",
+      "createdBy": 1
+    },
+    {
+      "id": 15,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 14,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AIbian"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AIbian</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAIbian",
+      "createdAt": "2026-03-24T18:18:56.234Z",
+      "createdBy": 1
+    },
+    {
+      "id": 16,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 15,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AIbian编码hen'you'yi's"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AIbian编码hen'you'yi's</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAIbian编码hen'you'yi's",
+      "createdAt": "2026-03-24T18:18:56.792Z",
+      "createdBy": 1
+    },
+    {
+      "id": 17,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 16,
+      "title": "未命名笔记",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AIbian编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AIbian编码很有意思</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAIbian编码很有意思",
+      "createdAt": "2026-03-24T18:19:04.202Z",
+      "createdBy": 1
+    },
+    {
+      "id": 18,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 17,
+      "title": "dang'ri",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AIbian编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AIbian编码很有意思</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAIbian编码很有意思",
+      "createdAt": "2026-03-24T18:19:05.572Z",
+      "createdBy": 1
+    },
+    {
+      "id": 19,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 18,
+      "title": "当日xin'de",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AIbian编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AIbian编码很有意思</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAIbian编码很有意思",
+      "createdAt": "2026-03-24T18:19:06.567Z",
+      "createdBy": 1
+    },
+    {
+      "id": 20,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 19,
+      "title": "当日心得",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AIbian编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AIbian编码很有意思</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAIbian编码很有意思",
+      "createdAt": "2026-03-24T18:19:32.549Z",
+      "createdBy": 1
+    },
+    {
+      "id": 21,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 20,
+      "title": "当日心得",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AI编码很有意思</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "createdAt": "2026-03-24T18:19:39.170Z",
+      "createdBy": 1
+    },
+    {
+      "id": 22,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 21,
+      "title": "当日心得",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<h1>还不错的尝试</h1><p>以后继续试试看</p><p>AI编码很有意思</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "createdAt": "2026-03-24T18:19:43.447Z",
+      "createdBy": 1
+    },
+    {
+      "id": 23,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 22,
+      "title": "当日心得",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>还不错的尝试</p><p>以后继续试试看</p><p>AI编码很有意思</p>",
+      "contentText": "还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "createdAt": "2026-03-24T18:19:45.441Z",
+      "createdBy": 1
+    },
+    {
+      "id": 24,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 23,
+      "title": "当日心得",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph"
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p></p><p>还不错的尝试</p><p>以后继续试试看</p><p>AI编码很有意思</p>",
+      "contentText": "\n\n还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "createdAt": "2026-03-24T18:19:48.259Z",
+      "createdBy": 1
+    },
+    {
+      "id": 25,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 24,
+      "title": "当日心得",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "当日心动"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>当日心动</p><p>还不错的尝试</p><p>以后继续试试看</p><p>AI编码很有意思</p>",
+      "contentText": "当日心动\n\n还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "createdAt": "2026-03-24T18:19:49.856Z",
+      "createdBy": 1
+    },
+    {
+      "id": 26,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 25,
+      "title": "当日心得",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "当日心得i"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>当日心得i</p><p>还不错的尝试</p><p>以后继续试试看</p><p>AI编码很有意思</p>",
+      "contentText": "当日心得i\n\n还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "createdAt": "2026-03-24T18:19:50.569Z",
+      "createdBy": 1
+    },
+    {
+      "id": 27,
+      "noteUid": "note_6a99f40b-5f25-4c24-a9fe-4f0f79ab7fb7",
+      "userId": 1,
+      "versionNo": 26,
+      "title": "当日心得",
+      "contentJson": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "当日心得"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "还不错的尝试"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "以后继续试试看"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "AI编码很有意思"
+              }
+            ]
+          }
+        ]
+      },
+      "contentHtml": "<p>当日心得</p><p>还不错的尝试</p><p>以后继续试试看</p><p>AI编码很有意思</p>",
+      "contentText": "当日心得\n\n还不错的尝试\n\n以后继续试试看\n\nAI编码很有意思",
+      "createdAt": "2026-03-24T18:19:53.029Z",
+      "createdBy": 1
+    }
+  ],
+  "operationLogs": []
+}

@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color: #0f172a;
+  background-color: #f8fafc;
+  font-family:
+    "Manrope",
+    "PingFang SC",
+    "Microsoft YaHei",
+    "Noto Sans SC",
+    sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.noteflow-editor .ProseMirror {
+  min-height: 480px;
+  outline: none;
+}
+
+.noteflow-editor .ProseMirror > * + * {
+  margin-top: 0.85em;
+}
+
+.noteflow-editor .ProseMirror h1 {
+  @apply mt-8 text-4xl font-semibold tracking-tight text-slate-950 dark:text-white;
+}
+
+.noteflow-editor .ProseMirror h2 {
+  @apply mt-6 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100;
+}
+
+.noteflow-editor .ProseMirror h3 {
+  @apply mt-5 text-2xl font-semibold text-slate-900 dark:text-slate-100;
+}
+
+.noteflow-editor .ProseMirror p {
+  @apply text-[17px] leading-8 text-slate-700 dark:text-slate-200;
+}
+
+.noteflow-editor .ProseMirror ul {
+  @apply list-disc pl-6 text-slate-700 dark:text-slate-200;
+}
+
+.noteflow-editor .ProseMirror ol {
+  @apply list-decimal pl-6 text-slate-700 dark:text-slate-200;
+}
+
+.noteflow-editor .ProseMirror li {
+  @apply my-2 leading-7;
+}
+
+.noteflow-editor .ProseMirror blockquote {
+  @apply my-6 rounded-r-2xl border-l-4 border-sky-300 bg-sky-50/70 px-5 py-3 italic text-slate-700 dark:border-sky-500/40 dark:bg-sky-500/10 dark:text-slate-200;
+}
+
+.noteflow-editor .ProseMirror code {
+  @apply rounded-lg bg-slate-100 px-1.5 py-0.5 font-mono text-sm text-sky-700 dark:bg-slate-800 dark:text-sky-200;
+}
+
+.noteflow-editor .ProseMirror pre {
+  @apply my-6 overflow-x-auto rounded-[24px] bg-slate-950 p-5 text-slate-100 shadow-inner;
+}
+
+.noteflow-editor .ProseMirror pre code {
+  @apply bg-transparent p-0 text-slate-100;
+}
+
+.noteflow-editor .ProseMirror a {
+  @apply text-sky-600 underline decoration-sky-300 underline-offset-4 dark:text-sky-300;
+}
+
+.noteflow-editor .ProseMirror hr {
+  @apply my-8 border-none border-t border-slate-200 dark:border-slate-700;
+}
+
+.noteflow-editor .ProseMirror ul[data-type="taskList"] {
+  @apply list-none pl-0;
+}
+
+.noteflow-editor .ProseMirror ul[data-type="taskList"] li {
+  @apply my-3 flex items-start gap-3;
+}
+
+.noteflow-editor .ProseMirror ul[data-type="taskList"] li > label {
+  @apply mt-1;
+}
+
+.noteflow-editor .ProseMirror p.is-editor-empty:first-child::before {
+  @apply pointer-events-none float-left h-0 text-slate-400 dark:text-slate-500;
+  content: attr(data-placeholder);
+}
